@@ -1,4 +1,4 @@
-import { Box, Divider } from '@mui/material'
+import { Box, Divider, Stack } from '@mui/material'
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import SearchIcon from '@mui/icons-material/Search';
@@ -9,48 +9,91 @@ import IconButton from '@mui/material/IconButton';
 
 import Tooltip from '@mui/material/Tooltip';
 
+// new 
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
 const RightMenu = () => {
-    const [ anchorEl, setAnchorEl ] = React.useState( null );
-    const open = Boolean( anchorEl );
-    const handleClick = ( event ) => {
-        setAnchorEl( event.currentTarget );
+    const navigate = useNavigate()
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
-        setAnchorEl( null );
+        setAnchorEl(null);
     };
+
+
+    const logOutExit = () => {
+        let data = JSON.stringify({
+            clientcode: JSON.parse(localStorage.getItem('user_detail')),
+        });
+
+        let config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: 'http://localhost:3000/api/user-logout',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': JSON.parse(localStorage.getItem('user_jwt_token'))
+            },
+            data: data
+        };
+
+        axios.request(config)
+            .then((response) => {
+                // console.log(JSON.stringify(response.data.data.jwtToken));
+                localStorage.removeItem("user_detail")
+                localStorage.removeItem("user_jwt_token")
+                navigate("/Login")
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
     return (
         <>
-            <Box textAlign={ `center` } className={ `md:flex  gap-2  lg:gap-5 text-[16px] items-center hidden ` }  >
-                <NavLink className={ `main-link ` }  >Login</NavLink>
+            {/* <Box textAlign={`center`} className={`md:flex  gap-2  lg:gap-5 text-[16px] items-center hidden `}  >
+                <NavLink className={`main-link `}  >Login</NavLink>
                 <Divider orientation="vertical" flexItem />
-                <NavLink className={ `main-link` }  >Sign up</NavLink>
-                <NavLink className={ `main-link active-link ` }  > <SearchIcon /> </NavLink>
-                <button className='basic-button rounded-3xl text-sm'  >
-                    Work With Us
+                <NavLink className={`main-link`}  >Sign up</NavLink>
+                <NavLink className={`main-link active-link `}  > <SearchIcon /> </NavLink>
+                <button onClick={() => { logOutExit() }} className='basic-button rounded-3xl text-sm'  >
+                    Log Out
                 </button>
-            </Box >
+            </Box > */}
+            <Box className='hidden md:flex items-baseline justify-end px-10 ' >
+                <Box>
+                    <Stack direction="row" spacing={2}>
+                        <NavLink onClick={() => { logOutExit() }} className={`main-link active-link`}  >Log Out</NavLink>
+
+                    </Stack>
+                </Box>
+            </Box>
 
             <Box className="md:hidden  text-end  "  >
                 <Tooltip title="More">
                     <IconButton
-                        onClick={ handleClick }
+                        onClick={handleClick}
                         size="small"
-                        sx={ { ml: 2 } }
-                        aria-controls={ open ? 'account-menu' : undefined }
+                        sx={{ ml: 2 }}
+                        aria-controls={open ? 'account-menu' : undefined}
                         aria-haspopup="true"
-                        aria-expanded={ open ? 'true' : undefined }
+                        aria-expanded={open ? 'true' : undefined}
                     >
                         <MoreVertIcon />
                     </IconButton>
                 </Tooltip>
 
                 <Menu
-                    anchorEl={ anchorEl }
+                    anchorEl={anchorEl}
                     id="account-menu"
-                    open={ open }
-                    onClose={ handleClose }
-                    onClick={ handleClose }
-                    PaperProps={ {
+                    open={open}
+                    onClose={handleClose}
+                    onClick={handleClose}
+                    PaperProps={{
                         elevation: 0,
                         sx: {
                             overflow: 'visible',
@@ -75,31 +118,31 @@ const RightMenu = () => {
                                 zIndex: 0,
                             },
                         },
-                    } }
-                    transformOrigin={ { horizontal: 'right', vertical: 'top' } }
-                    anchorOrigin={ { horizontal: 'right', vertical: 'bottom' } }
+                    }}
+                    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 >
-                    <MenuItem onClick={ handleClose }>
+                    <MenuItem onClick={handleClose}>
                         Search
                     </MenuItem>
-                    <MenuItem onClick={ handleClose }>
+                    <MenuItem onClick={handleClose}>
                         Catalog
                     </MenuItem>
-                    <MenuItem onClick={ handleClose }>
+                    {/* <MenuItem onClick={handleClose}>
                         For You
                     </MenuItem>
-                    <MenuItem onClick={ handleClose }>
+                    <MenuItem onClick={handleClose}>
                         More
                     </MenuItem>
-                    <MenuItem onClick={ handleClose }>
+                    <MenuItem onClick={handleClose}>
                         Login
                     </MenuItem>
-                    <MenuItem onClick={ handleClose }>
+                    <MenuItem onClick={handleClose}>
                         Signup
-                    </MenuItem>
-                    {/* <Divider /> */ }
-                    <MenuItem onClick={ handleClose }>
-                        Work With Us
+                    </MenuItem> */}
+                    {/* <Divider /> */}
+                    <MenuItem onClick={() => { logOutExit() }}>
+                        Log Out
                     </MenuItem>
                 </Menu>
 
