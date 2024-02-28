@@ -9,6 +9,7 @@ import SportsComponent from '../components/SportsComponent'
 import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
 import { useState } from "react";
+import CandleStickChart from '../components/CandleStickChart'
 
 Chart.register(CategoryScale);
 
@@ -21,17 +22,12 @@ const DrawerHeader = styled('div')(({ theme }) => ({
       ...theme.mixins.toolbar,
 }));
 const Sports = () => {
-      const data = {
-            labels: ['Red', 'Orange', 'Blue', 'purpel', 'yellow', 'Red', 'Orange', 'Blue', 'purpel', 'yellow'],
-            // datasets is an array of objects where each object represents a set of data to display corresponding to the labels above. for brevity, we'll keep it at one object
-            datasets: [{
-                  label: 'My First Dataset',
-                  data: [65, 59, 80, 81, 56, 55, 40],
-                  fill: false,
-                  borderColor: 'rgb(75, 192, 192)',
-                  tension: 0.1
-            }]
-      }
+      const data = [
+            { date: "2024-01-01", open: 100, high: 120, low: 90, close: 110 },
+            { date: "2024-01-02", open: 110, high: 130, low: 100, close: 120 },
+            { date: "2024-01-03", open: 120, high: 140, low: 110, close: 130 },
+            // Add more data here as needed
+      ];
       const [chartData, setChartData] = useState(
             data
       );
@@ -46,7 +42,11 @@ const Sports = () => {
                   <Sidebar />
                   <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                         <DrawerHeader />
-                        <SportsComponent chartData={chartData} />
+                        {/* <SportsComponent chartData={chartData} /> */}
+                        <div>
+                              <h2>Candlestick Chart Example</h2>
+                              <CandleStickChart />
+                        </div>
                   </Box>
             </Box>
       )
